@@ -1,0 +1,56 @@
+<%- include('../templates/header') %>
+<div id="app" class="container">
+    <div class="row mt-3">
+        <h1>Participantes</h1>
+    </div>
+    <div v-for="(participante, index) in participantes" :key="index"  class="row mt-3">
+        <div class="col-md-6">
+            <input type="text" v-model="participante.nome" placeholder="Nome" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <input type="email" v-model="participante.email" placeholder="Email" @keyup.enter="adicionar()" class="form-control">
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <button @click="adicionar()" class="btn btn-success">+ Adicionar</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12 d-grid">
+            <button @click="sortear()" class="btn btn-success">Sortear</button>
+        </div>
+    </div>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            participantes: []
+        },
+        mounted() {
+            this.adicionar();
+        },
+        methods: {
+            adicionar() {
+                this.participantes.push({
+                    nome: '',
+                    email: ''
+                });
+            },
+            sortear() {
+                axios.post('http://localhost:8000/sortear', {
+                    participantes: this.participantes,
+                })
+                    .then((res) => {
+                        alert(res.data.message);
+                        this.participantes = [];
+                        this.adicionar();
+                    }).catch((err) => {
+                        alert(err.data.message);
+                    })
+            }
+        }
+    });
+</script>
+<%- include('../templates/footer') %>
