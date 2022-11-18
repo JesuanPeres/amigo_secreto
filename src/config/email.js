@@ -1,9 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const config = {
-    host: process.env.MAIL_HOST,
-    port: process.env.MAIL_PORT,
-    secure: true,
+    service: 'Gmail',
     auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
@@ -30,3 +28,6 @@ module.exports = (to, subject, html) => {
         }
     });
 }
+
+
+
