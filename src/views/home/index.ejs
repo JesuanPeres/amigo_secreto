@@ -39,7 +39,7 @@
                 });
             },
             sortear() {
-                axios.post('http://localhost:8000/sortear', {
+                axios.post('<%= process.env.APP_URL %>:<%= process.env.PORT %>/sortear', {
                     participantes: this.participantes,
                 })
                     .then((res) => {

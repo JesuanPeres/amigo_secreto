@@ -19,26 +19,23 @@ module.exports = {
         if (participantes.length < 3) {
             res.status(406).json({message: 'Número de participantes insuficiente'});
         }
-        
-        
-        const alvos = participantes.map(p => ({...p}));
-        
-        for(let i = 0; i < participantes.length;) {
-            const index = Math.floor((Math.random() * alvos.length));
-            if (alvos[index].nome != participantes[i].nome) {
-                const p = alvos.splice(index, 1)[0];
-                participantes[i].alvo = p;
-                i++;
-            } else if (alvos.length == 1) {
-                return res.status(500, {message: 'Não foi possível sortear'});
-            }
+
+        const shuffled = [];
+        while (participantes.length > 0) {
+            const index = Math.floor((Math.random() * participantes.length));
+            const participante = participantes.splice(index, 1)[0];
+            shuffled.push(participante);
         }
 
-        participantes.forEach(async (p) =>{
-            const message =  `<h1>Olá ${p.nome} você sorteou ${p.alvo.nome} no amigo secreto</h1>`
-            await email(p.email, 'Amigo Secreto', message);
+        for(let i = 0; i < shuffled.length ; i++) {
+            shuffled[i].alvo = (i < shuffled.length - 1) ? shuffled[i + 1].nome : shuffled[0].nome
+        }
+
+        shuffled.forEach(async (participante) =>{
+            const message =  `<h1>Olá ${participante.nome} você sorteou ${participante.alvo} no amigo secreto</h1>`;
+            await email(participante.email, 'Amigo Secreto', message);
         });
 
-        return res.json({message: 'sucesso'})
+        return res.json({message: 'Sucesso! Emails enviados!'})
     }
 }
